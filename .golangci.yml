@@ -1,0 +1,38 @@
+# Forked from k6/xk6/xk6-sql .golangci.yml:
+# https://github.com/grafana/xk6/blob/b706106c95bf9dff3b091552626fa9bbf249d7b8/.golangci.yml
+
+issues:
+  # Maximum issues count per one linter. Set to 0 to disable. Default is 50.
+  max-issues-per-linter: 0
+  # Maximum count of issues with the same text. Set to 0 to disable. Default is 3.
+  max-same-issues: 0
+
+linters-settings:
+  misspell:
+    locale: US
+
+linters:
+  enable:
+    - bodyclose
+    - cyclop
+    - dupl
+    - errcheck
+    - funlen
+    - gochecknoglobals
+    - gocognit
+    - gofmt
+    - goimports
+    - golint
+    - gosec
+    - govet
+    - ineffassign
+    - lll
+    - misspell
+    - prealloc
+    - staticcheck
+
+run:
+  timeout: 5m
+  go: '1.17'
+  issues-exit-code: 1
+  modules-download-mode: readonly

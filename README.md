@@ -2,6 +2,8 @@
 
 A K6 Extension for Neo4j
 
+🍴 forked from [grafana/xk6-sql](https://github.com/grafana/xk6-sql)
+
 ---
 
 ## Development
@@ -139,3 +141,9 @@ Starting Neo4j.
 Started neo4j (pid:1324). It is available at http://localhost:7474
 There may be a short delay until the server is ready.
 ```
+
+❗ Note you'll need to change the default `neo4j` password:
+
+[Set an initial password](https://neo4j.com/docs/operations-manual/current/configuration/set-initial-password/)
+
+or browse to `http://localhost:7474`

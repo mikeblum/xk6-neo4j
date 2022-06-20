@@ -14,7 +14,12 @@ help:
 
 build:
 	go mod download
-	GOARCH=amd64 GOOS=linux xk6 build --with github.com/mikeblum/xk6-neo4j=.
+	go install go.k6.io/xk6/cmd/xk6@latest
+	GOARCH=amd64 GOOS=linux \
+	XK6_RACE_DETECTOR=1 \
+	xk6 build \
+		--with github.com/grafana/xk6-client-prometheus-remote@latest \
+		--with github.com/mikeblum/xk6-neo4j=.
 
 ## clean: Removes any previously created build artifacts.
 clean:

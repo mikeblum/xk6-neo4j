@@ -1,7 +1,9 @@
 package neo4j
 
 import (
+	"fmt"
 	"go.k6.io/k6/js/modules"
+	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 )
 
 // forked from the xk6-sql impl:
@@ -13,7 +15,9 @@ type RootModule struct{}
 
 // Neo4j represents an instance of the Neo4j module for every VU.
 type Neo4j struct {
-	vu modules.VU
+	conf 	*Conf
+	driver  *neo4j.Driver
+	vu 		modules.VU
 }
 
 var (
@@ -31,4 +35,49 @@ func (*RootModule) NewModuleInstance(vu modules.VU) modules.Instance {
 // of the JS module.
 func (neo4j *Neo4j) Exports() modules.Exports {
 	return modules.Exports{Default: neo4j}
+}
+
+func (neo4j *Neo4j) OpenWithConf() (*neo4j.Driver, error) {
+	if neo4j.conf == nil {
+		return nil, fmt.Errorf("no conf found")
+	}
+	return neo4j.Open(neo4j.getEnvOr(NEO4J_ADDR, NEO4J_DEFAULT_ADDR), 
+		neo4j.getEnvOr(NEO4J_USERNAME, NEO4J_DEFAULT_USERNAME), 
+		neo4j.getEnvOr(NEO4J_PASSWORD, NEO4J_DEFAULT_PASSWORD))
+}
+
+// Open a neo4j db connection:
+// "neo4j://localhost:7687", "neo4j", "?????"
+func (neo4j *Neo4j) Open(connectionString string, username string, password string) (*neo4j.Driver, error) {
+	// short-circuit if a driver is configured
+	if neo4j.driver != nil {
+		return neo4j.driver, nil
+	}
+	driver, err := createDriver(connectionString, username, password)
+	if err != nil {
+		return nil, err
+	}
+	neo4j.driver = &driver
+	return neo4j.driver, err
+}
+
+func createDriver(connectionString string, username string, password string) (neo4j.Driver, error) {
+	return neo4j.NewDriver(connectionString, neo4j.BasicAuth(username, password, ""))
+}
+
+// call on application exit
+func closeDriver(driver neo4j.Driver) error {
+	return driver.Close()
+}
+
+func (neo4j *Neo4j) getEnvOr(envVar string, defaultTo string) string {
+	val, ok := neo4j.getEnv(envVar); if ok {
+		return val
+	} else {
+		return defaultTo
+	}
+}
+
+func (neo4j *Neo4j) getEnv(envVar string) (string, bool) {
+	return neo4j.conf.GetString(envVar), neo4j.conf.IsSet(envVar)
 }

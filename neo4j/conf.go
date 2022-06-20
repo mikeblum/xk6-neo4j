@@ -25,6 +25,7 @@ func NewConf() *Conf {
 	conf := viper.New()
 	conf.AddConfigPath(".")
 	conf.AddConfigPath("..")
+	conf.AddConfigPath("../..")
     conf.SetConfigName(".env")
 	conf.ReadInConfig()
 	conf.AutomaticEnv()

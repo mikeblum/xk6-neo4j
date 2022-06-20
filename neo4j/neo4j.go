@@ -25,10 +25,18 @@ var (
 	_ modules.Instance = &Neo4j{}
 )
 
+// New returns a pointer to a new RootModule instance.
+func New() *RootModule {
+    return &RootModule{}
+}
+
 // NewModuleInstance implements the modules.Module interface to return
 // a new instance for each VU.
 func (*RootModule) NewModuleInstance(vu modules.VU) modules.Instance {
-	return &Neo4j{vu: vu}
+	return &Neo4j{
+		conf: NewConf(),
+		vu: vu,
+	}
 }
 
 // Exports implements the modules.Instance interface and returns the exports
@@ -37,7 +45,7 @@ func (neo4j *Neo4j) Exports() modules.Exports {
 	return modules.Exports{Default: neo4j}
 }
 
-func (neo4j *Neo4j) OpenWithConf() (*neo4j.Driver, error) {
+func (neo4j *Neo4j) OpenWithConf() (*Neo4j, error) {
 	if neo4j.conf == nil {
 		return nil, fmt.Errorf("no conf found")
 	}
@@ -48,17 +56,27 @@ func (neo4j *Neo4j) OpenWithConf() (*neo4j.Driver, error) {
 
 // Open a neo4j db connection:
 // "neo4j://localhost:7687", "neo4j", "?????"
-func (neo4j *Neo4j) Open(connectionString string, username string, password string) (*neo4j.Driver, error) {
+func (neo4j *Neo4j) Open(connectionString string, username string, password string) (*Neo4j, error) {
 	// short-circuit if a driver is configured
 	if neo4j.driver != nil {
-		return neo4j.driver, nil
+		return neo4j, nil
 	}
 	driver, err := createDriver(connectionString, username, password)
 	if err != nil {
 		return nil, err
 	}
 	neo4j.driver = &driver
-	return neo4j.driver, err
+	return neo4j, err
+}
+
+// Verify a neo4j db connection
+func (neo4j *Neo4j) Verify() (bool, error) {
+	if neo4j.driver == nil {
+		return false, fmt.Errorf("no driver configured")
+	}
+	driver := *neo4j.driver
+	err := driver.VerifyConnectivity()
+	return err == nil, err
 }
 
 func createDriver(connectionString string, username string, password string) (neo4j.Driver, error) {
@@ -66,7 +84,11 @@ func createDriver(connectionString string, username string, password string) (ne
 }
 
 // call on application exit
-func closeDriver(driver neo4j.Driver) error {
+func (neo4j *Neo4j) Close() error {
+	if neo4j.driver == nil {
+		return fmt.Errorf("driver improperly closed")
+	}
+	driver := *neo4j.driver
 	return driver.Close()
 }
 

@@ -28,6 +28,9 @@ clean:
 test:
 	go test -cover -race ./... -coverprofile=coverage.out
 
+test-integration: build
+	./k6 run k6-tests/verify_test.js
+
 ## lint: Lint with golangci-lint
 lint:
 	golangci-lint run ./...
@@ -42,4 +45,4 @@ version:
 	k6 version
 	xk6 version
 
-.PHONY: help
+.PHONY: build

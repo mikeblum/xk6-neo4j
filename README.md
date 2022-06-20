@@ -79,7 +79,7 @@ scrape_configs:
       - targets: ['localhost:2004']
 ```
 
-6/. Install OpenJDK 11 [Neo4j dep]
+6\. Install OpenJDK 11 [Neo4j dep]
 
 ```
 java --version
@@ -88,11 +88,11 @@ OpenJDK Runtime Environment Temurin-11.0.15+10 (build 11.0.15+10)
 OpenJDK 64-Bit Server VM Temurin-11.0.15+10 (build 11.0.15+10, mixed mode)
 ```
 
-7/. Start Neo4j
+7\. Start Neo4j
 
 `/usr/local/neo4j/bin/neo4j start`
 
-8/. Raise the `ulimit` if you encounter: 
+8\. Raise the `ulimit` if you encounter: 
 
 > WARNING: Max 4096 open files allowed, minimum of 40000 recommended. See the Neo4j manual.
 

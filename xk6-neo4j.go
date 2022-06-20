@@ -6,5 +6,5 @@ import (
 )
 
 func init() {
-	modules.Register("k6/x/neo4j", new(neo4j.RootModule))
+	modules.Register("k6/x/neo4j", neo4j.New())
 }

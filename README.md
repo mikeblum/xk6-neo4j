@@ -1,12 +1,21 @@
 # xk6-neo4j
 
-A K6 Extension for Neo4j
-
-🍴 forked from [grafana/xk6-sql](https://github.com/grafana/xk6-sql)
+A [k6](https://k6.io/) extension for [Neo4j](https://neo4j.com/) - a graph database
 
 ---
 
+## Legal
+
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 ## Development
+
+Supported Neo4j [versions](https://neo4j.com/developer/kb/neo4j-supported-versions/): 
+
+| Neo4j Version  | Edition       |
+| -------------  | ------------- |
+| Neo4j 4.4.x    | Community     |
+
 
 ### From Source
 
@@ -147,3 +156,7 @@ There may be a short delay until the server is ready.
 [Set an initial password](https://neo4j.com/docs/operations-manual/current/configuration/set-initial-password/)
 
 or browse to `http://localhost:7474`
+
+
+
+> 🍴 forked from [grafana/xk6-sql](https://github.com/grafana/xk6-sql)

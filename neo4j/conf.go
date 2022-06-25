@@ -1,6 +1,7 @@
 package neo4j
 
 import (
+	"fmt"
 	"github.com/spf13/viper"
 )
 
@@ -26,9 +27,13 @@ func NewConf() *Conf {
 	conf.AddConfigPath(".")
 	conf.AddConfigPath("..")
 	conf.AddConfigPath("../..")
-    conf.SetConfigName(".env")
-	conf.ReadInConfig()
+	conf.SetConfigName(".env")
+	conf.SetConfigType("env")
 	conf.AutomaticEnv()
+	err := conf.ReadInConfig() // Find and read the config file
+	if err != nil { // Handle errors reading the config file
+		panic(fmt.Errorf("Fatal error config file: %w \n", err))
+	}
 	return &Conf{
 		conf,
 	}

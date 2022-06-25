@@ -1,7 +1,7 @@
 import { check } from 'k6';
 import neo4j from 'k6/x/neo4j';
 
-const db = neo4j.open("neo4j://localhost:7687", "neo4j", "localhost");
+const db = neo4j.openWithConf();
 
 export function setup() { }
 

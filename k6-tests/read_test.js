@@ -1,7 +1,7 @@
 import { check } from 'k6';
 import neo4j from 'k6/x/neo4j';
 
-const db = neo4j.open("neo4j://localhost:7687", "neo4j", "localhost");
+const db = neo4j.openWithConf();
 
 export function setup() { }
 
@@ -10,7 +10,8 @@ export function teardown() {
 }
 
 export default function () {
-    check(db.verify(), {
-        'is status OK': (status) => status === true,
+    check(db.return(), {
+        // why doesn't === work here returning int64?
+        'is response OK': (r) => r == 1,
     });
 }

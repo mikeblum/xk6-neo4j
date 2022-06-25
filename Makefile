@@ -30,6 +30,8 @@ test:
 
 test-integration: build
 	./k6 run k6-tests/verify_test.js
+	./k6 run k6-tests/conf_test.js
+	./k6 run k6-tests/read_test.js
 
 ## lint: Lint with golangci-lint
 lint:
